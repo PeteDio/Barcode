@@ -1,4 +1,4 @@
-package com.barcode.barcode.Repository;
+package com.barcode.barcode.repository;
 
 import com.barcode.barcode.model.Item;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends MongoRepository<Item, Integer> {
-    List<Item> findByBarcodesIn(Collection<List<String>> barcodes);
+    Item findByBarcodesIn(String barcodes);
 }

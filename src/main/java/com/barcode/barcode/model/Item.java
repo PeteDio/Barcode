@@ -1,10 +1,17 @@
 package com.barcode.barcode.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Setter
+@Getter
+@AllArgsConstructor
 @Document(collection = "items")
 public class Item {
     @Id
@@ -12,22 +19,20 @@ public class Item {
     private String name;
     private List<String> barcodes;
 
-    // Constructors (required for Spring Data)
-    public Item() {}
-
-    public Item(int id, String name, List<String> barcodes) {
-        this.id = id;
-        this.name = name;
-        this.barcodes = barcodes;
+    public void addBarcode(String barcode) {
+        if (this.barcodes == null) {
+            this.barcodes = new ArrayList<>();
+        }
+        if (barcode != null && !barcode.isEmpty() && !this.barcodes.contains(barcode)) {
+            this.barcodes.add(barcode);
+        }
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public List<String> getBarcodes() { return barcodes; }
-    public void setBarcodes(List<String> barcodes) { this.barcodes = barcodes; }
-
+    public void addBarcodes(List<String> newBarcodes) {
+        if (newBarcodes != null && !newBarcodes.isEmpty()) {
+            for (String barcode : newBarcodes) {
+                addBarcode(barcode);
+            }
+        }
+    }
 }

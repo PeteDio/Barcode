@@ -1,12 +1,11 @@
 package com.barcode.barcode.controller;
+
 import com.barcode.barcode.model.Item;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.barcode.barcode.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.barcode.barcode.Repository.ItemRepository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,56 +14,104 @@ import java.util.Optional;
 @RequestMapping("/api/items")
 public class ItemController {
 
-    @Autowired
-    private ItemRepository itemRepository;
+    private final ItemService itemService;
 
-    @GetMapping
-    public List<Item> getAllItems() {
-        return itemRepository.findAll();
+    public ItemController(ItemService itemService) {
+        this.itemService = itemService;
     }
 
+    @GetMapping("/")
+    public ResponseEntity<List<Item>> getAllItems() {
+        List<Item> items = itemService.findAll();
+
+        if (items.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(items, HttpStatus.OK);
+        }
+    }
+    /**
+     * Fetches an item by its ID.
+     * <p>
+     * This API endpoint retrieves an item from the database based on the provided ID.
+     *
+     * @param id The unique identifier of the item to retrieve.
+     * @return A ResponseEntity object containing the retrieved item and the HTTP status code.
+     *         - If the item is found, the status code is set to HttpStatus. OK and the response body contains the item data.
+     *         - If the item is not found, the status code is set to HttpStatus.NOT_FOUND.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Item> getItemById(@PathVariable int id) {
-        Optional<Item> item = itemRepository.findById(id);
-        return item.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        var item = itemService.getItemById(id);
+        if(item == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(item, HttpStatus.OK);
     }
-
+    /**
+     * Creates a new item.
+     * <p>
+     * This API endpoint creates a new item and persists it to the database.
+     *
+     * @param item The item data to be created. The item data is provided in the request body.
+     * @return A ResponseEntity object containing the created item and the HTTP status code.
+     *         - If the item is created successfully, the status code is set to HttpStatus. CREATED and the response body contains the created item data.
+     */
     @PostMapping
     public ResponseEntity<Item> createItem(@RequestBody Item item) {
-        Item savedItem = itemRepository.save(item);
+        Item savedItem = itemService.save(item);
         return new ResponseEntity<>(savedItem, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestBody Item item) {
-        if (!itemRepository.existsById(id)) {
+    /**
+     * Updates an existing item's barcode.
+     * <p>
+     * This API endpoint updates the barcode of an existing item identified by its ID.
+     * The barcode provided in the request body must adhere to the following format: one or more digits,
+     * optionally separated by dashes.
+     *
+     * @param id The unique identifier of the item to update.
+     * @param barcodesToAdd The new barcode/s for the item.
+     * @return A ResponseEntity object containing the updated item and the HTTP status code.
+     *         - If the ID is invalid or the item is not found, the status code is set to HttpStatus.BAD_REQUEST.
+     *         - If the provided barcode format is invalid, the status code is set to HttpStatus.BAD_REQUEST.
+     *         - If the item is updated successfully, the status code is set to HttpStatus. OK and the response body contains the updated item data.
+     */
+    @PutMapping("/{id}/barcodes")
+    public ResponseEntity<Item> addBarcodeToItem(@PathVariable int id, @RequestBody List<String> barcodesToAdd) {
+        Item item = itemService.getItemById(id);
+
+        if (item == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        item.setId(id);
-        Item updatedItem = itemRepository.save(item);
+
+        Item updatedItem = new Item(item.getId(),item.getName(),item.getBarcodes());
+        updatedItem.addBarcodes(barcodesToAdd);
+
+        updatedItem = itemService.save(updatedItem);
+
         return new ResponseEntity<>(updatedItem, HttpStatus.OK);
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteItem(@PathVariable int id) {
-        if (!itemRepository.existsById(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        itemRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
+    /**
+     * Searches for items by a list of barcodes.
+     * <p>
+     * This API endpoint retrieves items from the database that match any of the provided barcodes in the request body.
+     *
+     * @param barcode A string barcode to search for.
+     * @return A ResponseEntity object containing:
+     *         - A list of matching items on success (HTTP status 200 OK).
+     *         - An empty body with HTTP status 400 Bad Request if no barcodes are provided or the list is empty.
+     *         - An empty body with HTTP status 404 Not Found if no items are found for the provided barcodes.
+     */
     @GetMapping("/search")
-    public ResponseEntity<List<Item>> searchItemsByBarcode(@RequestParam List<String> barcodes) {
-        if (barcodes == null || barcodes.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Item> searchItemsByBarcode(@RequestBody String barcode) {
+        if (barcode == null || barcode.isEmpty()) {
+            return ResponseEntity.badRequest().build();
         }
-        List<Item> items = itemRepository.findByBarcodesIn(Collections.singleton(barcodes));
-        if (items.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(items, HttpStatus.OK);
-    }
 
+        Optional<Item> item = Optional.ofNullable(itemService.findByBarcodesIn(barcode));
+
+        return item.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
+
