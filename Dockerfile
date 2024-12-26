@@ -11,7 +11,7 @@ RUN mvn dependency:go-offline
 RUN mvn package -DskipTests
 
 # Stage 2: Create the final image
-FROM openjdk:latest AS run-stage
+FROM openjdk:24-ea-23-jdk-slim-bullseye AS run-stage
 WORKDIR /app
 
 # Copy only the final jar file from the build stage
