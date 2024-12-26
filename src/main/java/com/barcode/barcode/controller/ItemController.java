@@ -37,11 +37,27 @@ public class ItemController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestBody Item item) {
+    public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestBody String barcode) {
         if (!itemRepository.existsById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        item.setId(id);
+
+        // Validate barcode format
+        if (!barcode.matches("^[0-9]+$")) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Correct return type
+        }
+
+        // Fetch the item
+        Optional<Item> optionalItem = itemRepository.findById(id);
+        if (!optionalItem.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Item item = optionalItem.get();
+
+        // Update item list (avoid creating a new object)
+        item.getBarcodes().add(barcode);
+
+        // Save the updated item
         Item updatedItem = itemRepository.save(item);
         return new ResponseEntity<>(updatedItem, HttpStatus.OK);
     }
