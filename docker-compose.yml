@@ -1,0 +1,19 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/barcode
+  mongo:
+    image: "mongo:latest"
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_container:/data/db
+volumes:
+  mongodb_data_container:
