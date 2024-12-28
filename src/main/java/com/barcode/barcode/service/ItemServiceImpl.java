@@ -16,7 +16,7 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public List<Item> findAll() {
+    public List<Item> getAll() {
         return itemRepository.findAll();
     }
 
@@ -31,7 +31,7 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public Item findByBarcodesIn(String barcode) {
+    public Item getByBarcodesIn(String barcode) {
         return itemRepository.findByBarcodesIn(barcode);
     }
 
@@ -39,6 +39,11 @@ public class ItemServiceImpl implements ItemService{
     public Boolean hasBarcode(String barcode) {
         Optional<Item> item = Optional.ofNullable(itemRepository.findByBarcodesIn(barcode));
         return item.isPresent();
+    }
+
+    @Override
+    public List<Item> getByName(String name) {
+        return itemRepository.findByNameContainingIgnoreCase(name);
     }
 
 }

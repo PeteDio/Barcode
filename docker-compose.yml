@@ -3,15 +3,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: debug-stage
     ports:
       - "8080:8080"
-      - "5005:5005"
     depends_on:
       - mongo
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/barcode
-      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
   mongo:
     image: "mongo:latest"
     ports:
