@@ -48,6 +48,7 @@ public class ItemController {
         }
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
+
     /**
      * Creates a new item.
      * <p>
@@ -64,18 +65,21 @@ public class ItemController {
     }
 
     /**
-     * Updates an existing item's barcode.
+     * Updates an existing item's barcode(s).
      * <p>
-     * This API endpoint updates the barcode of an existing item identified by its ID.
-     * The barcode provided in the request body must adhere to the following format: one or more digits,
-     * optionally separated by dashes.
+     * This API endpoint updates the barcode(s) of an existing item identified by its ID.
+     * You can provide one or more barcodes in the request body. Each barcode must adhere to the following format:
+     * one or more digits, optionally separated by dashes.
      *
      * @param id The unique identifier of the item to update.
-     * @param barcodesToAdd The new barcode/s for the item.
+     * @param barcodesToAdd A list of new barcodes for the item.
      * @return A ResponseEntity object containing the updated item and the HTTP status code.
      *         - If the ID is invalid or the item is not found, the status code is set to HttpStatus.BAD_REQUEST.
      *         - If the provided barcode format is invalid, the status code is set to HttpStatus.BAD_REQUEST.
-     *         - If the item is updated successfully, the status code is set to HttpStatus. OK and the response body contains the updated item data.
+     *         - If any of the provided barcodes already exist in the system, the status code is set to HttpStatus.CONFLICT and no update will be performed.
+     *         - If the item is updated successfully, the status code is set to HttpStatus.OK and the response body contains the updated item data.
+     *
+     * @throws IllegalArgumentException If an invalid barcode format is provided.
      */
     @PutMapping("/{id}/barcodes")
     public ResponseEntity<Item> addBarcodeToItem(@PathVariable int id, @RequestBody List<String> barcodesToAdd) {
@@ -86,9 +90,13 @@ public class ItemController {
         }
 
         Item updatedItem = new Item(item.getId(),item.getName(),item.getBarcodes());
-        updatedItem.addBarcodes(barcodesToAdd);
-
-        updatedItem = itemService.save(updatedItem);
+        for (String barcode : barcodesToAdd) {
+            if (itemService.hasBarcode(barcode)) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+            updatedItem.addBarcode(barcode);
+        }
+        itemService.save(updatedItem);
 
         return new ResponseEntity<>(updatedItem, HttpStatus.OK);
     }
