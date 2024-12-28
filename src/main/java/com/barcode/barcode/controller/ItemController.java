@@ -66,7 +66,7 @@ public class ItemController {
     }
 
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestParam String name) {
         Item existingItem = itemService.getItemById(id);
         var updatedItem = new Item(existingItem.getId(),name,new ArrayList<>());
