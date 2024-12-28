@@ -5,13 +5,13 @@
 </head>
 <body>
 <h1>Edit Item</h1>
-<form th:action="@{/api/items/{id}(id=${item.id})}" th:method="PUT" th:object="${item}">
+<!--/*@thymesVar id="item" type="com.barcode.barcode.model.Item"*/-->
+<div th:object="${item}">
     <input type="hidden" th:field="*{id}"/>
-    <input type="hidden" th:field="*{barcodes}"/> <label for="name">Name:</label>
+    <input type="hidden" /> <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}"/><br><br>
-    <button type="submit">Update Item</button>
     <label>Barcodes:</label><br>
-    <ul id="barcodeList">
+    <ul id="barcodeList" th:field="*{barcodes}">
         <li th:each="barcode, stat : ${item.barcodes}" th:id="'barcode-' + ${stat.index}">
             <div th:text="${stat.index + 1}"></div>
             <span th:text="${barcode}"></span>
@@ -23,8 +23,8 @@
     <label for="newBarcode"></label><input type="text" id="newBarcode" placeholder="Enter new barcode..."/>
     <button type="button" onclick="addNewBarcode()">Add Barcode</button>
     <br><br>
-    <button type="submit">Update Barcodes</button>
-</form>
+    <button type="button" id="submitButton" onclick="saveItem()">Save</button>
+</div>
 
 <script>
     const removeBarcode = (index) => {
@@ -55,6 +55,10 @@
         list.appendChild(listItem);
         document.querySelector("#newBarcode").value = "";
 
+    }
+    const saveItem = () => {
+        alert("hello")
+        // TODO: Create PUT request
     }
 </script>
 </body>

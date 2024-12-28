@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService{
             existingItem.setName(updatedItem.getName());
         }
 
-        if (updatedItem.getBarcodes() != null) {
+        if (updatedItem.getBarcodes() != null && !updatedItem.getBarcodes().isEmpty()) {
             existingItem.setBarcodes(updatedItem.getBarcodes());
         }
         // Add other fields as needed (e.g., description, etc.)

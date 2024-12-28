@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,23 +65,11 @@ public class ItemController {
         return new ResponseEntity<>(savedItem, HttpStatus.CREATED);
     }
 
-    /**
-     * Updates an existing item.
-     * <p>
-     * This endpoint updates the details of an item identified by its ID.
-     * It receives the updated item data in the request body as JSON.
-     *
-     * @param id The ID of the item to update.
-     * @param updatedItem The updated Item object received in the request body.
-     * @return A ResponseEntity containing:
-     *         - The updated Item object with an HTTP status of 200 (OK) if the update is successful.
-     *         - An HTTP status of 404 (NOT_FOUND) if an item with the given ID does not exist.
-     *         - An HTTP status of 400 (BAD_REQUEST) if the request is malformed or if there are issues with the data.
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestBody Item updatedItem) {
-        Item existingItem = itemService.getItemById(id);
 
+    @PostMapping("/{id}")
+    public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestParam String name) {
+        Item existingItem = itemService.getItemById(id);
+        var updatedItem = new Item(existingItem.getId(),name,new ArrayList<>());
         if (existingItem == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
