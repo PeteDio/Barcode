@@ -22,7 +22,7 @@ public class ItemController {
 
     @GetMapping("/")
     public ResponseEntity<List<Item>> getAllItems() {
-        List<Item> items = itemService.findAll();
+        List<Item> items = itemService.getAll();
 
         if (items.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -117,9 +117,30 @@ public class ItemController {
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<Item> item = Optional.ofNullable(itemService.findByBarcodesIn(barcode));
+        Optional<Item> item = Optional.ofNullable(itemService.getByBarcodesIn(barcode));
 
         return item.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Searches for items by name.
+     * <p>
+     * This API endpoint retrieves items from the database that partially match the provided name in the request path.
+     * It uses a case-insensitive search.
+     *
+     * @param name The name (or part of the name) to search for.
+     * @return A ResponseEntity object containing:
+     *         - A list of matching items on success (HTTP status 200 OK).
+     *         - An empty body with HTTP status 404 Not Found if no items are found for the provided name.
+     */
+    @GetMapping("/search/name/")
+    public ResponseEntity<List<Item>> searchItemsByName(@RequestBody String name) {
+        if (name == null || name.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Item> items = itemService.getByName(name);
+        return !items.isEmpty() ? ResponseEntity.ok(items) : ResponseEntity.notFound().build();
     }
 }
 
