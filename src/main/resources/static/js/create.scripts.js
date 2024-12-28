@@ -1,3 +1,5 @@
+import {createItem} from "./Utils";
+
 (() => {
 
     const createButton = document.querySelector("#create-button")
@@ -10,7 +12,8 @@
             name,
             barcodes
         }
-        console.log(data)
+
+        createItem(data);
 
     })
 })()
