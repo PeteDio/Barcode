@@ -5,7 +5,8 @@ import com.barcode.barcode.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,13 +63,22 @@ public class ItemController {
      * Creates a new item.
      * <p>
      * This API endpoint creates a new item and persists it to the database.
+     * The request body should contain the item data in JSON format.
+     * The item data is validated before being saved. If the validation fails,
+     * an error response with the appropriate HTTP status code will be returned.
      *
      * @param item The item data to be created. The item data is provided in the request body.
-     * @return A ResponseEntity object containing the created item and the HTTP status code.
-     *         - If the item is created successfully, the status code is set to HttpStatus. CREATED and the response body contains the created item data.
+     * @param result The BindingResult object containing validation errors (if any).
+     * @return A ResponseEntity object containing:
+     *         - The created item and the HTTP status code of 201 (CREATED) if the item is created successfully.
+     *         - An error response with the appropriate HTTP status code and a list of validation errors if the item is not valid.
      */
     @PostMapping
-    public ResponseEntity<Item> createItem(@RequestBody Item item) {
+    public ResponseEntity<Item> createItem(@Valid @RequestBody Item item, BindingResult result) {
+        if (result.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         Item savedItem = itemService.save(item);
         return new ResponseEntity<>(savedItem, HttpStatus.CREATED);
     }

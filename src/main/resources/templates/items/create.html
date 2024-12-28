@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"  lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Create</title>
+    <title>Create Item</title>
 </head>
 <body>
+<h1>Create New Item</h1>
 
+<form th:object="${item}">
+    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+        <p th:each="error : ${#fields.errors('*')}" th:text="${error}"></p>
+    </div>
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="*{name}" /><br><br>
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+
+    <label for="barcodes">Barcodes (comma-separated):</label>
+    <input type="text" id="barcodes" name="barcodes" /><br><br>
+
+    <button type="submit" id="create-button">Create Item</button>
+</form>
+
+<a href="/admin/items">Back to Item List</a>
+<script src="/js/create.scripts.js"></script>
 </body>
 </html>

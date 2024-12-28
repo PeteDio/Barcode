@@ -37,6 +37,12 @@ public class AdminItemController {
         }
     }
 
+    @GetMapping("/create") // Maps to /admin/items/create
+    public String showCreateForm(Model model) {
+        model.addAttribute("item", new Item()); // Add an empty Item object to the model
+        return "items/create"; // Returns the view name for the create form
+    }
+
     @GetMapping("/error")
     public String handleError(Model model) {
         String errorMessage = "An unexpected error occurred.";
