@@ -86,9 +86,13 @@ public class ItemController {
         }
 
         Item updatedItem = new Item(item.getId(),item.getName(),item.getBarcodes());
-        updatedItem.addBarcodes(barcodesToAdd);
-
-        updatedItem = itemService.save(updatedItem);
+        for (String barcode : barcodesToAdd) {
+            if (itemService.hasBarcode(barcode)) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+            updatedItem.addBarcode(barcode);
+        }
+        itemService.save(updatedItem);
 
         return new ResponseEntity<>(updatedItem, HttpStatus.OK);
     }

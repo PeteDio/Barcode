@@ -12,4 +12,6 @@ public interface ItemService {
     Item save(Item item);
 
     Item findByBarcodesIn(String barcode);
+
+    Boolean hasBarcode(String barcode);
 }

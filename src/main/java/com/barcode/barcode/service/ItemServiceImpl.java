@@ -5,7 +5,7 @@ import com.barcode.barcode.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class ItemServiceImpl implements ItemService{
@@ -33,6 +33,12 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public Item findByBarcodesIn(String barcode) {
         return itemRepository.findByBarcodesIn(barcode);
+    }
+
+    @Override
+    public Boolean hasBarcode(String barcode) {
+        Optional<Item> item = Optional.ofNullable(itemRepository.findByBarcodesIn(barcode));
+        return item.isPresent();
     }
 
 }
