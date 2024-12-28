@@ -21,13 +21,13 @@ public class AdminItemController {
         return "items/list";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/edit")
     public String createItemForm() {
-        return "items/create";
+        return "items/edit";
     }
 
     @GetMapping("/error")
-    public String handleError(Model model, Exception exception) {
+    public String handleError(Model model) {
         String errorMessage = "An unexpected error occurred.";
 
         model.addAttribute("errorMessage", errorMessage);
