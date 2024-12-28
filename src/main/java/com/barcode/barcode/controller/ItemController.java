@@ -20,6 +20,15 @@ public class ItemController {
         this.itemService = itemService;
     }
 
+    /**
+     * Retrieves all items.
+     * <p>
+     * This endpoint retrieves a list of all items available in the system.
+     *
+     * @return A ResponseEntity containing:
+     *         - A list of Item objects with an HTTP status of 200 (OK) if items are found.
+     *         - An HTTP status of 204 (NO_CONTENT) if no items are found.
+     */
     @GetMapping("/")
     public ResponseEntity<List<Item>> getAllItems() {
         List<Item> items = itemService.getAll();
@@ -64,7 +73,19 @@ public class ItemController {
         return new ResponseEntity<>(savedItem, HttpStatus.CREATED);
     }
 
-
+    /**
+     * Updates an existing item.
+     * <p>
+     * This endpoint updates the details of an item identified by its ID.
+     * The request body should contain the updated item data in JSON format.
+     * Only the provided fields in the `updatedItem` will be updated; other fields will remain unchanged.
+     *
+     * @param id The ID of the item to update.
+     * @param updatedItem The Item object containing the updated data.
+     * @return A ResponseEntity containing:
+     *         - The updated Item object with an HTTP status of 200 (OK) if the update is successful.
+     *         - An HTTP status of 404 (NOT_FOUND) if an item with the given ID does not exist.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestBody Item updatedItem) {
         Item existingItem = itemService.getItemById(id);
