@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Item List</title>
+</head>
+<body>
+<h1>Item List</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Barcodes</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.name}"></td>
+        <td>
+            <ul>
+                <li th:each="barcode : ${item.barcodes}" th:text="${barcode}"></li>
+            </ul>
+        </td>
+        <td>
+            <a th:href="@{/admin/items/${item.id}/edit}">Edit</a> |
+            <a th:href="@{/admin/items/${item.id}/delete}">delete</a> |
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="/admin/items/create">Create New Item</a>
+</body>
+</html>
