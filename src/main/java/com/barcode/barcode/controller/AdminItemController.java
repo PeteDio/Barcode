@@ -17,7 +17,7 @@ public class AdminItemController {
 
     @GetMapping
     public String listItems(Model model) {
-        model.addAttribute("items", itemService.findAll());
+        model.addAttribute("items", itemService.getAll());
         return "items/list";
     }
 
