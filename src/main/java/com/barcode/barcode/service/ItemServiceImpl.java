@@ -45,5 +45,26 @@ public class ItemServiceImpl implements ItemService{
     public List<Item> getByName(String name) {
         return itemRepository.findByNameContainingIgnoreCase(name);
     }
+    public void updateItem(Item existingItem, Item updatedItem) {
+        if (existingItem == null || updatedItem == null) {
+            throw new IllegalArgumentException("Existing item and updated item cannot be null.");
+        }
+
+        // Update fields individually to avoid overwriting unintended fields (important!)
+        if (updatedItem.getName() != null) {
+            existingItem.setName(updatedItem.getName());
+        }
+
+        if (updatedItem.getBarcodes() != null && !updatedItem.getBarcodes().isEmpty()) {
+            existingItem.setBarcodes(updatedItem.getBarcodes());
+        }
+        // Add other fields as needed (e.g., description, etc.)
+
+        itemRepository.save(existingItem);
+    }
+    @Override
+    public Optional<Item> findById(Integer id) {
+        return itemRepository.findById(id);
+    }
 
 }

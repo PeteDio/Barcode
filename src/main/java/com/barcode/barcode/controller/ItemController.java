@@ -64,6 +64,20 @@ public class ItemController {
         return new ResponseEntity<>(savedItem, HttpStatus.CREATED);
     }
 
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestBody Item updatedItem) {
+        Item existingItem = itemService.getItemById(id);
+
+        if (existingItem == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        itemService.updateItem(existingItem, updatedItem);
+
+        return new ResponseEntity<>(existingItem, HttpStatus.OK);
+    }
+
     /**
      * Updates an existing item's barcode(s).
      * <p>
@@ -82,20 +96,25 @@ public class ItemController {
      * @throws IllegalArgumentException If an invalid barcode format is provided.
      */
     @PutMapping("/{id}/barcodes")
-    public ResponseEntity<Item> addBarcodeToItem(@PathVariable int id, @RequestBody List<String> barcodesToAdd) {
+    public ResponseEntity<Item> addBarcodeToItem(@PathVariable int id, @RequestBody List<String> barcodesToAdd, @RequestParam(required = false) List<String> existingBarcodes) {
         Item item = itemService.getItemById(id);
 
         if (item == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        Item updatedItem = new Item(item.getId(),item.getName(),item.getBarcodes());
-        for (String barcode : barcodesToAdd) {
-            if (itemService.hasBarcode(barcode)) {
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
+        Item updatedItem = new Item(item.getId(), item.getName(), existingBarcodes != null ? existingBarcodes : item.getBarcodes());
+
+        // Add new barcodes (if any)
+        if (barcodesToAdd != null && !barcodesToAdd.isEmpty()) {
+            for (String barcode : barcodesToAdd) {
+                if (itemService.hasBarcode(barcode)) {
+                    return new ResponseEntity<>(HttpStatus.CONFLICT);
+                }
+                updatedItem.addBarcode(barcode);
             }
-            updatedItem.addBarcode(barcode);
         }
+
         itemService.save(updatedItem);
 
         return new ResponseEntity<>(updatedItem, HttpStatus.OK);
