@@ -65,6 +65,32 @@ public class ItemController {
     }
 
     /**
+     * Updates an existing item.
+     * <p>
+     * This endpoint updates the details of an item identified by its ID.
+     * It receives the updated item data in the request body as JSON.
+     *
+     * @param id The ID of the item to update.
+     * @param updatedItem The updated Item object received in the request body.
+     * @return A ResponseEntity containing:
+     *         - The updated Item object with an HTTP status of 200 (OK) if the update is successful.
+     *         - An HTTP status of 404 (NOT_FOUND) if an item with the given ID does not exist.
+     *         - An HTTP status of 400 (BAD_REQUEST) if the request is malformed or if there are issues with the data.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestBody Item updatedItem) {
+        Item existingItem = itemService.getItemById(id);
+
+        if (existingItem == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        itemService.updateItem(existingItem, updatedItem);
+
+        return new ResponseEntity<>(existingItem, HttpStatus.OK);
+    }
+
+    /**
      * Updates an existing item's barcode(s).
      * <p>
      * This API endpoint updates the barcode(s) of an existing item identified by its ID.
@@ -82,20 +108,25 @@ public class ItemController {
      * @throws IllegalArgumentException If an invalid barcode format is provided.
      */
     @PutMapping("/{id}/barcodes")
-    public ResponseEntity<Item> addBarcodeToItem(@PathVariable int id, @RequestBody List<String> barcodesToAdd) {
+    public ResponseEntity<Item> addBarcodeToItem(@PathVariable int id, @RequestBody List<String> barcodesToAdd, @RequestParam(required = false) List<String> existingBarcodes) {
         Item item = itemService.getItemById(id);
 
         if (item == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        Item updatedItem = new Item(item.getId(),item.getName(),item.getBarcodes());
-        for (String barcode : barcodesToAdd) {
-            if (itemService.hasBarcode(barcode)) {
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
+        Item updatedItem = new Item(item.getId(), item.getName(), existingBarcodes != null ? existingBarcodes : item.getBarcodes());
+
+        // Add new barcodes (if any)
+        if (barcodesToAdd != null && !barcodesToAdd.isEmpty()) {
+            for (String barcode : barcodesToAdd) {
+                if (itemService.hasBarcode(barcode)) {
+                    return new ResponseEntity<>(HttpStatus.CONFLICT);
+                }
+                updatedItem.addBarcode(barcode);
             }
-            updatedItem.addBarcode(barcode);
         }
+
         itemService.save(updatedItem);
 
         return new ResponseEntity<>(updatedItem, HttpStatus.OK);

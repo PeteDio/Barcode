@@ -15,6 +15,7 @@
     </tr>
     </thead>
     <tbody>
+    <!--/*@thymesVar id="item" type="com.barcode.barcode.model.Item"*/-->
     <tr th:each="item : ${items}">
         <td th:text="${item.id}"></td>
         <td th:text="${item.name}"></td>
@@ -24,8 +25,8 @@
             </ul>
         </td>
         <td>
-            <a th:href="@{/admin/items/${item.id}/edit}">Edit</a> |
-            <a th:href="@{/admin/items/${item.id}/delete}">delete</a> |
+            <a th:href="@{/admin/items/{itemId}/edit(itemId=${item.id})}">Edit</a>
+            <a th:href="@{/admin/items/${item.id}/delete}">delete</a>
         </td>
     </tr>
     </tbody>
