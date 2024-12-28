@@ -27,8 +27,11 @@ jobs:
         java-version: '23'
         distribution: 'temurin'
         cache: maven
+    - name: Install Lombok
+      run: wget https://projectlombok.org/download/lombok.jar  chmod +x lombok.jar
+
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: compile -Dlombok.config.path=lombok.config -javaagent:./lombok.jar
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
