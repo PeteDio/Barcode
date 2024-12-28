@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY pom.xml .
 COPY src/main/java/ /app/src/main/java/
+COPY src/main/resources/templates /app/src/main/resources/templates
 
 # Cache dependencies and build the project
 RUN mvn dependency:go-offline
