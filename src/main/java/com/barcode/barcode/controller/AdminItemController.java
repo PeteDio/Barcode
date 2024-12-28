@@ -44,10 +44,7 @@ public class AdminItemController {
     }
 
     @GetMapping("/error")
-    public String handleError(Model model) {
-        String errorMessage = "An unexpected error occurred.";
-
-        model.addAttribute("errorMessage", errorMessage);
+    public String handleError() {
         return "error";
     }
 
