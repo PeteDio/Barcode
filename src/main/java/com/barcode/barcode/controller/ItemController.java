@@ -111,7 +111,7 @@ public class ItemController {
      *         - An empty body with HTTP status 400 Bad Request if no barcodes are provided or the list is empty.
      *         - An empty body with HTTP status 404 Not Found if no items are found for the provided barcodes.
      */
-    @GetMapping("/search")
+    @GetMapping("/search/barcode")
     public ResponseEntity<Item> searchItemsByBarcode(@RequestBody String barcode) {
         if (barcode == null || barcode.isEmpty()) {
             return ResponseEntity.badRequest().build();
