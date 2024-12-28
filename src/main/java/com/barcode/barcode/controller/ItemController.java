@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,9 +66,9 @@ public class ItemController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestParam String name) {
+    public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestBody Item updatedItem) {
         Item existingItem = itemService.getItemById(id);
-        var updatedItem = new Item(existingItem.getId(),name,new ArrayList<>());
+
         if (existingItem == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -8,13 +8,13 @@
 <!--/*@thymesVar id="item" type="com.barcode.barcode.model.Item"*/-->
 <div th:object="${item}">
     <input type="hidden" th:field="*{id}"/>
-    <input type="hidden" /> <label for="name">Name:</label>
+    <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}"/><br><br>
-    <label>Barcodes:</label><br>
-    <ul id="barcodeList" th:field="*{barcodes}">
+    <label th:field="*{barcodes}">Barcodes:</label><br>
+    <ul id="barcodeList">
         <li th:each="barcode, stat : ${item.barcodes}" th:id="'barcode-' + ${stat.index}">
-            <div th:text="${stat.index + 1}"></div>
-            <span th:text="${barcode}"></span>
+            <span th:text="${stat.index + 1}"></span>
+            <p th:text="${barcode}"></p>
             <button type="button" th:onclick="'removeBarcode(' + ${stat.index} + ')'">Remove</button>
         </li>
     </ul>
@@ -23,7 +23,7 @@
     <label for="newBarcode"></label><input type="text" id="newBarcode" placeholder="Enter new barcode..."/>
     <button type="button" onclick="addNewBarcode()">Add Barcode</button>
     <br><br>
-    <button type="button" id="submitButton" onclick="saveItem()">Save</button>
+    <button type="button" id="submitButton">Save</button>
 </div>
 
 <script>
@@ -51,15 +51,12 @@
         const listItem = document.createElement("li");
         let nextIndex = document.querySelector("#barcodeList").children.length;
         listItem.id = "barcode-" + nextIndex;
-        listItem.innerHTML = "<div>" + (nextIndex + 1) + "</div><span>" + newBarcode + "</span><button type='button' onclick='removeBarcode(" + nextIndex + ")'>Remove</button>";
+        listItem.innerHTML = "<span>" + (nextIndex + 1) + "</span><p>" + newBarcode + "</p><button type='button' onclick='removeBarcode(" + nextIndex + ")'>Remove</button>";
         list.appendChild(listItem);
         document.querySelector("#newBarcode").value = "";
 
     }
-    const saveItem = () => {
-        alert("hello")
-        // TODO: Create PUT request
-    }
 </script>
+<script src="/JS/edit.scripts.js"></script>
 </body>
 </html>
