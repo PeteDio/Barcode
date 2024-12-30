@@ -17,7 +17,7 @@ import java.util.List;
 @Document(collection = "items")
 public class Item {
     @Id
-    private int id;
+    private String id;
     private String name;
     private List<String> barcodes;
 

@@ -1,9 +1,6 @@
-import {updateItem} from "./Utils";
-
 (()=>{
     const saveButton = document.querySelector("#submitButton")
-    const removeButton =document.querySelector("#remove-button")
-    const addNewButton =document.querySelector("#add-new-button")
+
     saveButton.addEventListener("click", () => {
         const name = document.querySelector("#name").value
         const itemId = document.querySelector("#id").value
@@ -20,37 +17,28 @@ import {updateItem} from "./Utils";
         const data = {
             name, barcodes
         };
-        updateItem(itemId,data)
-    })
-
-    removeButton.addEventListener("click",()=>{
-            // Remove from the displayed list
-            const listItem = document.querySelector("#barcode-" + index);
-            if (listItem) {
-                listItem.remove();
+        fetch(`http://localhost:8080/api/items/${itemId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (!response.ok) {
+                //  Redirect to error page with error details (optional)
+                response.json().then(error => {
+                    const errorDetails = encodeURIComponent(JSON.stringify(error)); // Encode for URL
+                    window.location.href = `/error?message=${error.message}&details=${errorDetails}`;
+                }).catch(() => {
+                    window.location.href = "/error?message=An error occurred during update.";
+                });
+                return Promise.reject(); // Important: Reject the promise to stop further .then() execution
+            } else {
+                //  Redirect to view page
+                window.location.href = `/admin/items`;
+                return Promise.resolve();
             }
-    })
-
-    addNewButton.addEventListener("click",()=>{
-            const newBarcode = document.querySelector("#newBarcode").value;
-            // Basic validation
-            if (!newBarcode) {
-                alert("Please enter a barcode.");
-                return;
-            }
-            if (document.querySelector("#barcodeList").children.length >= 10) {
-                alert("You have reached the maximum number of barcodes");
-                return;
-            }
-
-            // Add to displayed list
-            const list = document.querySelector("#barcodeList");
-            const listItem = document.createElement("li");
-            let nextIndex = document.querySelector("#barcodeList").children.length;
-            listItem.id = "barcode-" + nextIndex;
-            listItem.innerHTML = "<span>" + (nextIndex + 1) + "</span><p>" + newBarcode + "</p><button type='button' onclick='removeBarcode(" + nextIndex + ")'>Remove</button>";
-            list.appendChild(listItem);
-            document.querySelector("#newBarcode").value = "";
+        })
     })
 
 })()

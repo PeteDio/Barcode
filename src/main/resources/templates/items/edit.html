@@ -15,17 +15,48 @@
         <li th:each="barcode, stat : ${item.barcodes}" th:id="'barcode-' + ${stat.index}">
             <span th:text="${stat.index + 1}"></span>
             <p th:text="${barcode}"></p>
-            <button type="button" id="remove-button">Remove</button>
+            <button type="button" th:onclick="'removeBarcode(' + ${stat.index} + ')'">Remove</button>
         </li>
     </ul>
 
     <h2>Add New Barcodes</h2>
     <label for="newBarcode"></label><input type="text" id="newBarcode" placeholder="Enter new barcode..."/>
-    <button type="button" id="add-new-button">Add Barcode</button>
+    <button type="button" onclick="addNewBarcode()">Add Barcode</button>
     <br><br>
     <button type="button" id="submitButton">Save</button>
 </div>
+
+<script>
+    const removeBarcode = (index) => {
+        // Remove from the displayed list
+        const listItem = document.querySelector("#barcode-" + index);
+        if (listItem) {
+            listItem.remove();
+        }
+    }
+    const addNewBarcode = () => {
+        const newBarcode = document.querySelector("#newBarcode").value;
+        // Basic validation
+        if (!newBarcode) {
+            alert("Please enter a barcode.");
+            return;
+        }
+        if (document.querySelector("#barcodeList").children.length >= 10) {
+            alert("You have reached the maximum number of barcodes");
+            return;
+        }
+
+        // Add to displayed list
+        const list = document.querySelector("#barcodeList");
+        const listItem = document.createElement("li");
+        let nextIndex = document.querySelector("#barcodeList").children.length;
+        listItem.id = "barcode-" + nextIndex;
+        listItem.innerHTML = "<span>" + (nextIndex + 1) + "</span><p>" + newBarcode + "</p><button type='button' onclick='removeBarcode(" + nextIndex + ")'>Remove</button>";
+        list.appendChild(listItem);
+        document.querySelector("#newBarcode").value = "";
+
+    }
+</script>
 <script src="/js/edit.scripts.js"></script>
-<script src="/js/Utils.js"></script>
 </body>
 </html>
