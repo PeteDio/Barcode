@@ -1,5 +1,5 @@
 (()=>{
-    const saveButton = document.querySelector("#submitButton")
+    const saveButton = document.querySelector("#submit-button")
 
     saveButton.addEventListener("click", () => {
         const name = document.querySelector("#name").value
