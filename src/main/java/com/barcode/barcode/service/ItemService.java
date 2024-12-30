@@ -22,4 +22,6 @@ public interface ItemService {
     List<String> isValidBarcode(List<String> Barcode);
 
     boolean hasName(String name);
+
+    boolean deleteItemById(String id);
 }

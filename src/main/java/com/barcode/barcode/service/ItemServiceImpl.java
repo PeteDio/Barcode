@@ -86,4 +86,9 @@ public class ItemServiceImpl implements ItemService{
         return itemRepository.existsByName(name);
     }
 
+    @Override
+    public boolean deleteItemById(String id) {
+        return itemRepository.deleteById(id);
+    }
+
 }
