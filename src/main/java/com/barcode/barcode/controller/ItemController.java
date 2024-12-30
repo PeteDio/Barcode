@@ -79,26 +79,31 @@ public class ItemController {
         if (result.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         List<String> invalidBarcodes = itemService.isValidBarcode(newItem.getBarcodes());
         if (!invalidBarcodes.isEmpty()) {
-            return new ResponseEntity<>(STR."Invalid barcode(s): \{String.join(", ", invalidBarcodes)}", HttpStatus.BAD_REQUEST);
+            String errorMessage = String.format("Invalid barcode(s): %s", String.join(", ", invalidBarcodes));
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
 
         // Check for existing barcodes
         for (String barcode : newItem.getBarcodes()) {
             if (itemService.hasBarcode(barcode)) {
-                return new ResponseEntity<>(STR."Barcode \{barcode} already assigned", HttpStatus.CONFLICT);
+                String errorMessage = String.format("Barcode %s already assigned", barcode);
+                return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
             }
         }
 
-        //check for existing name
+        // Check for existing name
         if (itemService.hasName(newItem.getName())) {
-            return new ResponseEntity<>(STR."Name \{newItem.getName()} already assigned", HttpStatus.CONFLICT);
+            String errorMessage = String.format("Name %s already assigned", newItem.getName());
+            return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
         }
 
         Item createdItem = new Item(newItem.getName(), newItem.getBarcodes());
         Item savedItem = itemService.save(createdItem);
-        return new ResponseEntity<>(STR."Item Successfully saved\{savedItem.toString()}", HttpStatus.CREATED);
+        String successMessage = String.format("Item Successfully saved: %s", savedItem);
+        return new ResponseEntity<>(successMessage, HttpStatus.CREATED);
     }
 
 
