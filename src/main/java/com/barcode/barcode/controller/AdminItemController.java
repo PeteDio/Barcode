@@ -43,7 +43,7 @@ public class AdminItemController {
      * @return The logical view name "items/edit" if the item is found, or a redirect to "/admin/items" otherwise.
      */
     @GetMapping("/{id}/edit")
-    public String editItem(@PathVariable Integer id, Model model) {
+    public String editItem(@PathVariable String id, Model model) {
         Item item = itemService.getItemById(id);
         if (item!=null) {
             model.addAttribute("item", item);
