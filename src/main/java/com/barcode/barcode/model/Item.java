@@ -21,6 +21,11 @@ public class Item {
     private String name;
     private List<String> barcodes;
 
+    public Item(String name, List<String> barcodes) {
+        this.name = name;
+        this.barcodes = barcodes;
+    }
+
     public void addBarcode(String barcode) {
         if (this.barcodes == null) {
             this.barcodes = new ArrayList<>();
