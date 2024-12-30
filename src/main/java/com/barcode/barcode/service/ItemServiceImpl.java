@@ -23,8 +23,8 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public Item getItemById(Integer id) {
-        return itemRepository.findById(id).orElse(null);
+    public Item getItemById(String id) {
+        return itemRepository.findById(id);
     }
 
     @Override
@@ -80,6 +80,10 @@ public class ItemServiceImpl implements ItemService{
             }
         }
         return invalidBarcodes;
+    }
+
+    public boolean hasName(String name) {
+        return itemRepository.existsByName(name);
     }
 
 }

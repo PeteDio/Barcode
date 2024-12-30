@@ -11,4 +11,8 @@ public interface ItemRepository extends MongoRepository<Item, Integer> {
     Item findByBarcodesIn(String barcodes);
 
     List<Item> findByNameContainingIgnoreCase(String name);
+
+    Item findById(String id);
+
+    boolean existsByName(String name);
 }

@@ -7,7 +7,7 @@ import java.util.List;
 public interface ItemService {
     List<Item> getAll();
 
-    Item getItemById(Integer id);
+    Item getItemById(String id);
 
     Item save(Item item);
 
@@ -20,4 +20,6 @@ public interface ItemService {
     void updateItem(Item existingItem, Item updatedItem);
 
     List<String> isValidBarcode(List<String> Barcode);
+
+    boolean hasName(String name);
 }
