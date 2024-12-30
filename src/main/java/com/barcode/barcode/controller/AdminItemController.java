@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Optional;
-
 @Controller
 @RequestMapping("/admin/items")
 public class AdminItemController {
@@ -46,9 +44,9 @@ public class AdminItemController {
      */
     @GetMapping("/{id}/edit")
     public String editItem(@PathVariable Integer id, Model model) {
-        Optional<Item> item = itemService.findById(id);
-        if (item.isPresent()) {
-            model.addAttribute("item", item.get());
+        Item item = itemService.getItemById(id);
+        if (item!=null) {
+            model.addAttribute("item", item);
             return "items/edit";
         } else {
             return "redirect:/admin/items"; // Redirect to the item list

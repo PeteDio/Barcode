@@ -3,12 +3,11 @@ package com.barcode.barcode.service;
 import com.barcode.barcode.model.Item;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ItemService {
     List<Item> getAll();
 
-    Item getItemById(int id);
+    Item getItemById(Integer id);
 
     Item save(Item item);
 
@@ -18,7 +17,7 @@ public interface ItemService {
 
     List<Item> getByName(String name);
 
-    Optional<Item> findById(Integer id);
-
     void updateItem(Item existingItem, Item updatedItem);
+
+    List<String> isValidBarcode(List<String> Barcode);
 }

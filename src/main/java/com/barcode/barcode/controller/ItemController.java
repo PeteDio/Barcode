@@ -40,6 +40,7 @@ public class ItemController {
             return new ResponseEntity<>(items, HttpStatus.OK);
         }
     }
+
     /**
      * Fetches an item by its ID.
      * <p>
@@ -51,7 +52,7 @@ public class ItemController {
      *         - If the item is not found, the status code is set to HttpStatus.NOT_FOUND.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Item> getItemById(@PathVariable int id) {
+    public ResponseEntity<Item> getItemById(@PathVariable Integer id) {
         var item = itemService.getItemById(id);
         if(item == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -97,7 +98,7 @@ public class ItemController {
      *         - An HTTP status of 404 (NOT_FOUND) if an item with the given ID does not exist.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable int id, @RequestBody Item updatedItem) {
+    public ResponseEntity<Item> updateItem(@PathVariable Integer id, @RequestBody Item updatedItem) {
         Item existingItem = itemService.getItemById(id);
 
         if (existingItem == null) {
@@ -109,47 +110,54 @@ public class ItemController {
         return new ResponseEntity<>(existingItem, HttpStatus.OK);
     }
 
-    /**
-     * Updates an existing item's barcode(s).
-     * <p>
-     * This API endpoint updates the barcode(s) of an existing item identified by its ID.
-     * You can provide one or more barcodes in the request body. Each barcode must adhere to the following format:
-     * one or more digits, optionally separated by dashes.
-     *
-     * @param id The unique identifier of the item to update.
-     * @param barcodesToAdd A list of new barcodes for the item.
-     * @return A ResponseEntity object containing the updated item and the HTTP status code.
-     *         - If the ID is invalid or the item is not found, the status code is set to HttpStatus.BAD_REQUEST.
-     *         - If the provided barcode format is invalid, the status code is set to HttpStatus.BAD_REQUEST.
-     *         - If any of the provided barcodes already exist in the system, the status code is set to HttpStatus.CONFLICT and no update will be performed.
-     *         - If the item is updated successfully, the status code is set to HttpStatus.OK and the response body contains the updated item data.
-     *
-     * @throws IllegalArgumentException If an invalid barcode format is provided.
-     */
+/**
+ * Updates an existing item's barcode(s).
+ * <p>
+ * This API endpoint updates the barcode(s) of an existing item identified by its ID.
+ * You can provide one or more barcodes in the request body. Each barcode must adhere to the following format:
+ * one or more digits, optionally separated by dashes.
+ *
+ * @param id The unique identifier of the item to update.
+ * @param barcodesToAdd A list of new barcodes for the item.
+ * @return A ResponseEntity object containing a message string and the HTTP status code.
+ *         - If the ID is invalid or the item is not found, the response body is "Item not found" and the status code is set to HttpStatus.BAD_REQUEST.
+ *         - If the provided barcode format is invalid (during validation), the response body contains the specific error message and the status code is set to HttpStatus.BAD_REQUEST.
+ *         - If any of the provided barcodes already exist in the system, the response body is "Barcode [existing_barcode] already assigned" and the status code is set to HttpStatus.CONFLICT.
+ *         - If the item is updated successfully, the response body is "Barcodes updated successfully" and the status code is set to HttpStatus.OK.
+ */
     @PutMapping("/{id}/barcodes")
-    public ResponseEntity<Item> addBarcodeToItem(@PathVariable int id, @RequestBody List<String> barcodesToAdd, @RequestParam(required = false) List<String> existingBarcodes) {
+    public ResponseEntity<String> addBarcodeToItem(@PathVariable Integer id, @RequestBody List<String> barcodesToAdd, @RequestParam(required = false) List<String> existingBarcodes) {
         Item item = itemService.getItemById(id);
 
         if (item == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Item not found", HttpStatus.BAD_REQUEST);
         }
 
         Item updatedItem = new Item(item.getId(), item.getName(), existingBarcodes != null ? existingBarcodes : item.getBarcodes());
 
-        // Add new barcodes (if any)
-        if (barcodesToAdd != null && !barcodesToAdd.isEmpty()) {
-            for (String barcode : barcodesToAdd) {
-                if (itemService.hasBarcode(barcode)) {
-                    return new ResponseEntity<>(HttpStatus.CONFLICT);
-                }
-                updatedItem.addBarcode(barcode);
+        // Validate barcodes (if any)
+        List<String> invalidBarcodes = itemService.isValidBarcode(barcodesToAdd);
+        if (!invalidBarcodes.isEmpty()) {
+            return new ResponseEntity<>(STR."Invalid barcode(s): \{String.join(", ", invalidBarcodes)}", HttpStatus.BAD_REQUEST);
+        }
+
+        // Check for existing barcodes
+        for (String barcode : barcodesToAdd) {
+            if (itemService.hasBarcode(barcode)) {
+                return new ResponseEntity<>(STR."Barcode \{barcode} already assigned", HttpStatus.CONFLICT);
             }
+        }
+
+        // Add new barcodes (if any)
+        if (!barcodesToAdd.isEmpty()) {
+            updatedItem.addBarcodes(barcodesToAdd);
         }
 
         itemService.save(updatedItem);
 
-        return new ResponseEntity<>(updatedItem, HttpStatus.OK);
+        return new ResponseEntity<>("Barcodes updated successfully", HttpStatus.OK);
     }
+
     /**
      * Searches for items by a list of barcodes.
      * <p>
