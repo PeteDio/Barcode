@@ -161,13 +161,15 @@ public class ItemController {
         // Validate barcodes (if any)
         List<String> invalidBarcodes = itemService.isValidBarcode(barcodesToAdd);
         if (!invalidBarcodes.isEmpty()) {
-            return new ResponseEntity<>(STR."Invalid barcode(s): \{String.join(", ", invalidBarcodes)}", HttpStatus.BAD_REQUEST);
+            String errorMessage = String.format("Invalid barcode(s): %s", String.join(", ", invalidBarcodes));
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
 
         // Check for existing barcodes
         for (String barcode : barcodesToAdd) {
             if (itemService.hasBarcode(barcode)) {
-                return new ResponseEntity<>(STR."Barcode \{barcode} already assigned", HttpStatus.CONFLICT);
+                String errorMessage = String.format("Barcode %s already assigned", barcode);
+                return new ResponseEntity<>(errorMessage, HttpStatus.CONFLICT);
             }
         }
 
