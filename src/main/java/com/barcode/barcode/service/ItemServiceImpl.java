@@ -3,7 +3,9 @@ package com.barcode.barcode.service;
 import com.barcode.barcode.model.Item;
 import com.barcode.barcode.repository.ItemRepository;
 import org.springframework.stereotype.Service;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +23,8 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public Item getItemById(int id) {
-        return itemRepository.findById(id).orElse(null);
+    public Item getItemById(String id) {
+        return itemRepository.findById(id);
     }
 
     @Override
@@ -50,7 +52,6 @@ public class ItemServiceImpl implements ItemService{
             throw new IllegalArgumentException("Existing item and updated item cannot be null.");
         }
 
-        // Update fields individually to avoid overwriting unintended fields (important!)
         if (updatedItem.getName() != null) {
             existingItem.setName(updatedItem.getName());
         }
@@ -58,13 +59,31 @@ public class ItemServiceImpl implements ItemService{
         if (updatedItem.getBarcodes() != null && !updatedItem.getBarcodes().isEmpty()) {
             existingItem.setBarcodes(updatedItem.getBarcodes());
         }
-        // Add other fields as needed (e.g., description, etc.)
 
         itemRepository.save(existingItem);
     }
+
     @Override
-    public Optional<Item> findById(Integer id) {
-        return itemRepository.findById(id);
+    public List<String> isValidBarcode(List<String> barcodes) {
+        List<String> invalidBarcodes = new ArrayList<>();
+        if (barcodes == null || barcodes.isEmpty()) {
+            return invalidBarcodes;
+        }
+
+        String regex = "^[0-9]+$";
+        Pattern pattern = Pattern.compile(regex);
+
+        for (String barcode : barcodes) {
+            Matcher matcher = pattern.matcher(barcode);
+            if (!matcher.matches()) {
+                invalidBarcodes.add(barcode);
+            }
+        }
+        return invalidBarcodes;
+    }
+
+    public boolean hasName(String name) {
+        return itemRepository.existsByName(name);
     }
 
 }

@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"  lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Create</title>
+    <title>Create Item</title>
+    <script type="text/javascript" th:src="@{/js/Utils.js}"></script>
 </head>
 <body>
+<h1>Create New Item</h1>
 
+<form th:object="${item}">
+    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+        <p th:each="error : ${#fields.errors('*')}" th:text="${error}"></p>
+    </div>
+    <input type="hidden" th:field="*{id}"/>
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="*{name}"/><br><br>
+    <label th:field="*{barcodes}">Barcodes:</label><br>
+    <ul id="barcodeList">
+        <li th:each="barcode, stat : ${item.barcodes}" th:id="'barcode-' + ${stat.index}">
+            <span th:text="${stat.index + 1}"></span>
+            <p th:text="${barcode}"></p>
+            <button type="button" th:onclick=`removeBarcode(${stat.index})`>Remove</button>
+        </li>
+    </ul>
+
+    <h2>Add New Barcodes</h2>
+    <label for="newBarcode"></label><input type="text" id="newBarcode" placeholder="Enter new barcode..."/>
+    <button type="button" onclick="addNewBarcode()">Add Barcode</button>
+    <br><br>
+    <button type="button" id="submit-button">Save</button>
+</form>
+
+<a href="/admin/items">Back to Item List</a>
+<script src="/js/create.scripts.js"></script>
 </body>
 </html>
