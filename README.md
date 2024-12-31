@@ -21,7 +21,7 @@ This command will build the Docker images for the application and its dependenci
 Alternatively, you can start only the application service:
 
 ```bash
-docker compose up app
+docker compose up api
 ``` 
 
 ## Accessing the API
