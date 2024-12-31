@@ -2,6 +2,7 @@ package com.barcode.barcode.controller;
 
 import com.barcode.barcode.model.Item;
 import com.barcode.barcode.dto.ItemRequestDTO;
+import com.barcode.barcode.repository.ItemRepository;
 import com.barcode.barcode.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,12 @@ import java.util.Optional;
 public class ItemController {
 
     private final ItemService itemService;
+    private final ItemRepository itemRepository;
 
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService,
+                          ItemRepository itemRepository) {
         this.itemService = itemService;
+        this.itemRepository = itemRepository;
     }
 
     /**
@@ -229,27 +233,23 @@ public class ItemController {
     /**
      * Deletes an item by its ID.
      * <p>
-     * This endpoint deletes an item from the database based on the provided ID.
-     *
-     * @param id The ID of the item to delete.
-     * @return A ResponseEntity containing:
-     *         - A success message ("Item deleted successfully") and HTTP status 200 (OK) if the item is deleted successfully.
-     *         - An error message ("Item not found") and HTTP status 404 (NOT_FOUND) if the item with the given ID does not exist.
-     *         - An error message ("Failed to delete item") and HTTP status 500 (INTERNAL_SERVER_ERROR) if an error occurs during deletion.
+     * @param id The ID of the item to be deleted.
+     * @return ResponseEntity with a success message and HTTP status OK
+     *         if the item is deleted successfully,
+     *         or a ResponseEntity with a "No item found" message and
+     *         HTTP status NO_CONTENT if no item with the given ID is found.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteItemByID(@PathVariable String id) {
-        if (itemService.getItemById(id) == null) {
-            return new ResponseEntity<>("Item not found", HttpStatus.NOT_FOUND);
-        }
 
-        boolean deleted = itemService.deleteItemById(id);
-
-        if (deleted) {
-            return new ResponseEntity<>("Item deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Failed to delete item", HttpStatus.INTERNAL_SERVER_ERROR);
+        var deletedItem = itemService.getItemById(id);
+        if(deletedItem == null){
+            return new ResponseEntity<>("No item found",HttpStatus.NO_CONTENT);
         }
+        itemService.delete(deletedItem);
+
+        return new ResponseEntity<>("Item deleted successfully", HttpStatus.OK);
+
     }
 }
 

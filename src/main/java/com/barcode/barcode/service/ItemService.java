@@ -23,5 +23,5 @@ public interface ItemService {
 
     boolean hasName(String name);
 
-    boolean deleteItemById(String id);
+    void delete(Item item);
 }
