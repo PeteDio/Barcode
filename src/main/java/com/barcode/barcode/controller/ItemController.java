@@ -2,6 +2,7 @@ package com.barcode.barcode.controller;
 
 import com.barcode.barcode.model.Item;
 import com.barcode.barcode.dto.ItemRequestDTO;
+import com.barcode.barcode.repository.ItemRepository;
 import com.barcode.barcode.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,12 @@ import java.util.Optional;
 public class ItemController {
 
     private final ItemService itemService;
+    private final ItemRepository itemRepository;
 
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService,
+                          ItemRepository itemRepository) {
         this.itemService = itemService;
+        this.itemRepository = itemRepository;
     }
 
     /**
@@ -224,6 +228,28 @@ public class ItemController {
 
         List<Item> items = itemService.getByName(name);
         return !items.isEmpty() ? ResponseEntity.ok(items) : ResponseEntity.notFound().build();
+    }
+
+    /**
+     * Deletes an item by its ID.
+     * <p>
+     * @param id The ID of the item to be deleted.
+     * @return ResponseEntity with a success message and HTTP status OK
+     *         if the item is deleted successfully,
+     *         or a ResponseEntity with a "No item found" message and
+     *         HTTP status NO_CONTENT if no item with the given ID is found.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteItemByID(@PathVariable String id) {
+
+        var deletedItem = itemService.getItemById(id);
+        if(deletedItem == null){
+            return new ResponseEntity<>("No item found",HttpStatus.NO_CONTENT);
+        }
+        itemService.delete(deletedItem);
+
+        return new ResponseEntity<>("Item deleted successfully", HttpStatus.OK);
+
     }
 }
 

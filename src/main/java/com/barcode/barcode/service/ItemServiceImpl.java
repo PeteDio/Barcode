@@ -3,11 +3,12 @@ package com.barcode.barcode.service;
 import com.barcode.barcode.model.Item;
 import com.barcode.barcode.repository.ItemRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ItemServiceImpl implements ItemService{
@@ -86,4 +87,8 @@ public class ItemServiceImpl implements ItemService{
         return itemRepository.existsByName(name);
     }
 
+    @Override
+    public void delete(Item item) {
+         itemRepository.delete(item);
+    }
 }

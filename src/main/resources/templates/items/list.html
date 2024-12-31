@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Item List</title>
+    <script type="text/javascript" th:src="@{/js/list.scripts.js}"></script>
 </head>
 <body>
 <h1>Item List</h1>
@@ -24,11 +25,11 @@
         </td>
         <td>
             <a th:href="@{/admin/items/{itemId}/edit(itemId=${item.id})}">Edit</a>
-            <a th:href="@{/admin/items/${item.id}/delete}">delete</a>
+            <button th:onclick="deleteItem([[${item.id}]])">Delete</button>
         </td>
     </tr>
     </tbody>
 </table>
-<a href="/admin/items/create">Create New Item</a>
+<a href="/create">Create New Item</a>
 </body>
 </html>

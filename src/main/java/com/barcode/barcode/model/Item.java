@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "items")
+@Document("items")
 public class Item {
     @Id
     private String id;

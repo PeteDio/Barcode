@@ -25,17 +25,16 @@
             body: JSON.stringify(data)
         }).then(response => {
             if (!response.ok) {
-                //  Redirect to error page with error details (optional)
                 response.json().then(error => {
                     const errorDetails = encodeURIComponent(JSON.stringify(error)); // Encode for URL
                     window.location.href = `/error?message=${error.message}&details=${errorDetails}`;
                 }).catch(() => {
                     window.location.href = "/error?message=An error occurred during update.";
                 });
-                return Promise.reject(); // Important: Reject the promise to stop further .then() execution
+                return Promise.reject();
             } else {
                 //  Redirect to view page
-                window.location.href = `/admin/items`;
+                window.location.href = `/items`;
                 return Promise.resolve();
             }
         })
