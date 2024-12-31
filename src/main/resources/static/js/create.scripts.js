@@ -14,7 +14,7 @@
 
             }
             else {
-                window.location.href = `/admin/items`;
+                window.location.href = `/`;
             }
         } catch (fetchError) {
             console.error("Fetch error:", fetchError);
