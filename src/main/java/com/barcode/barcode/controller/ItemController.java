@@ -35,7 +35,7 @@ public class ItemController {
      * - A list of Item objects with an HTTP status of 200 (OK) if items are found.
      * - An HTTP status of 204 (NO_CONTENT) if no items are found.
      */
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Item>> getAllItems() {
         List<Item> items = itemService.getAll();
 
