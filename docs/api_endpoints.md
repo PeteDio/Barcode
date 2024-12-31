@@ -131,3 +131,5 @@ This document provides a detailed description of the available API endpoints for
 * A `ResponseEntity` object containing:
     * A success message and HTTP status 200 (OK) if the item is deleted successfully.
     * A "No item found" message and HTTP status 404 (NOT_FOUND) if no item with the given ID is found. 
+
+For detailed information about the admin interface functionalities that utilize these API endpoints for data manipulation, refer to the [Admin Endpoints Documentation](./admin_endpoints.md).
