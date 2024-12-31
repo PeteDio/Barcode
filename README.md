@@ -28,3 +28,4 @@ docker compose up api
 ## Accessing the API
 * Once the application is running, you can access the API at the following URL: http://localhost:8080/
 
+For a detailed description of the available API endpoints and their usage, please refer to the [**API Endpoints**](./docs/api_endpoints.md) documentation.
