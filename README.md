@@ -7,6 +7,7 @@ This project implements a barcode database API using Spring Boot 3 and MongoDB.
 * Docker
 * Docker Compose
 
+For instructions on setting up and running the application outside of Docker containers, refer to the [**Standalone Setup Guide**](docs/native_setup.md).
 ## Running the application
 
 1. Navigate to the root directory of the project.
