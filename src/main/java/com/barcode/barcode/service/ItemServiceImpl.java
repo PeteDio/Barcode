@@ -91,4 +91,9 @@ public class ItemServiceImpl implements ItemService{
     public void delete(Item item) {
          itemRepository.delete(item);
     }
+
+    @Override
+    public long getItemCount() {
+        return itemRepository.count();
+    }
 }
