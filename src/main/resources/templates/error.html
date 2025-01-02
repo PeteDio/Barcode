@@ -6,6 +6,28 @@
 <body>
 <h1>An error occurred.</h1>
 <p id="errorMessage"></p>
-<!--TODO: create error page-->
+<script>
+    // Get the error message and details from the URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorMessage = urlParams.get('message');
+    const errorDetails = urlParams.get('details');
+
+    // Get the error message element
+    const errorMessageElement = document.getElementById('errorMessage');
+
+    // If an error message is present, display it
+    if (errorMessage) {
+        errorMessageElement.textContent = errorMessage;
+
+        // Optionally display error details if available
+        if (errorDetails) {
+            const detailsElement = document.createElement('p');
+            detailsElement.textContent = "Details: " + errorDetails;
+            errorMessageElement.appendChild(detailsElement);
+        }
+    } else {
+        errorMessageElement.textContent = "An unexpected error occurred.";
+    }
+</script>
 </body>
 </html>
