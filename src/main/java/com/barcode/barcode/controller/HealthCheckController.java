@@ -23,13 +23,20 @@ public class HealthCheckController {
      *
      * @return A ResponseEntity containing a HealthCheckResponseDTO object with the health status message
      *         and the current item count, and an HTTP status of 200 (OK) if the check is successful.
+     *         Returns an HTTP status of 500 (INTERNAL_SERVER_ERROR) if an error occurs during the check.
      */
     @GetMapping
     public ResponseEntity<HealthCheckResponseDTO> healthCheck() {
-        long itemCount = itemService.getItemCount();
-        HealthCheckResponseDTO response = new HealthCheckResponseDTO();
-        response.setMessage("Database healthy");
-        response.setItemCount(itemCount);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            long itemCount = itemService.getItemCount();
+            HealthCheckResponseDTO response = new HealthCheckResponseDTO();
+            response.setMessage("Database healthy");
+            response.setItemCount(itemCount);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            HealthCheckResponseDTO errorResponse = new HealthCheckResponseDTO();
+            errorResponse.setMessage("Database health check failed.");
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
