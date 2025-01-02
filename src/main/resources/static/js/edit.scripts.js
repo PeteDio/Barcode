@@ -34,7 +34,7 @@
                 return Promise.reject();
             } else {
                 //  Redirect to view page
-                window.location.href = `/items`;
+                window.location.href = `/`;
                 return Promise.resolve();
             }
         })
