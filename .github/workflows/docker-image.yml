@@ -1,9 +1,8 @@
-name: Docker Image CI
+name: Docker build
 
 on:
-  push:
-    branches:
-      - "dev"
+  pull_request:
+    branches: [ "main","dev" ]
 
 jobs:
   build:
@@ -18,6 +17,3 @@ jobs:
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag petedillo/barcode
-
-      - name: Push the Docker image to Docker Hub
-        run: docker push petedillo/barcode
