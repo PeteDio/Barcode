@@ -1,0 +1,99 @@
+/* Heading Section */
+.custom-heading {
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    color: #e5e7eb;
+    margin-bottom: 1.5rem;
+}
+
+/* Table Container */
+.table-container {
+    max-width: 100%;
+    padding: 1rem;
+}
+
+/* Table Styling */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 0.5rem;
+    background-color: #2d3748;
+    color: #f3f4f6;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Table Header */
+.table-header {
+    background-color: #374151;
+}
+
+.table-cell {
+    padding: 1rem;
+    border: 1px solid #374151;
+    text-align: left;
+}
+
+/* Barcode Container */
+.barcode-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-start;
+}
+
+/* Barcode Chip */
+.barcode-chip {
+    background-color: #4b5563;
+    color: #d1d5db;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    text-align: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Action Links */
+.edit-link {
+    color: #60a5fa;
+    transition: color 0.2s;
+}
+
+.edit-link:hover {
+    color: #3b82f6;
+}
+
+.delete-button {
+    color: #ef4444;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 1rem;
+    transition: color 0.2s;
+}
+
+.delete-button:hover {
+    color: #dc2626;
+}
+
+/* Create New Item Link Container */
+.create-item-container {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+/* Create New Item Link */
+.create-item-link {
+    display: inline-block;
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.create-item-link:hover {
+    background-color: #2563eb;
+}

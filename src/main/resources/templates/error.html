@@ -1,11 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Error</title>
+    <script type="text/javascript" th:src="@{/js/Utils.js}"></script>
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+    <link th:href="@{/css/error.css}" rel="stylesheet" />
 </head>
 <body>
-<h1>An error occurred.</h1>
-<p id="errorMessage"></p>
+<!-- Page Heading -->
+<h1 class="error-heading">An Error Occurred</h1>
+
+<!-- Error Message Section -->
+<div class="error-container">
+    <p id="errorMessage" class="error-message"></p>
+</div>
+<!-- Back to Item List Button -->
+<div class="mt-6 text-center">
+    <a href="/" class="error-back-link">
+        Back to Item List
+    </a>
+</div>
 <script>
     // Get the error message and details from the URL query parameters
     const urlParams = new URLSearchParams(window.location.search);
