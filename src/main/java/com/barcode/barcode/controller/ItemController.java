@@ -71,7 +71,6 @@ public class ItemController {
      * - The created item's details as a String representation and the HTTP status code of 201 (CREATED)  if the item is created successfully.
      * - An error message with the appropriate HTTP status code (BAD_REQUEST or CONFLICT) if the request is invalid or the item already exists.
      */
-
     @PostMapping
     public ResponseEntity<String> createItem(@RequestBody ItemRequestDTO newItem, BindingResult result) {
         if (result.hasErrors()) {
@@ -215,7 +214,7 @@ public class ItemController {
      * - An empty body with HTTP status 404 Not Found if no items are found for the provided name.
      */
     @GetMapping("/search/name/")
-    public ResponseEntity<List<Item>> searchItemsByName(@RequestBody String name) {
+    public ResponseEntity<List<Item>> searchItemsByName(@RequestParam String name) {
         if (name == null || name.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
