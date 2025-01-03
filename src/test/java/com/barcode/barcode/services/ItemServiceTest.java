@@ -161,5 +161,14 @@ public class ItemServiceTest {
         verify(itemRepository).delete(itemToDelete);
     }
 
+    @Test
+    public void testGetItemCount() {
+        long expectedCount = 10L;
+        given(itemRepository.count()).willReturn(expectedCount);
+
+        long actualCount = itemService.getItemCount();
+
+        assertThat(actualCount).isEqualTo(expectedCount);
+    }
 
 }
