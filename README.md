@@ -29,5 +29,6 @@ docker compose up api
 
 * **UI:** Access the user interface at: http://localhost:8080/
 * **API:** Access the API at: http://localhost:8080/api/items
+* **Healthcheck:** Access the API at: http://localhost:8080/admin/healthcheck
 
 For a detailed description of the available API endpoints and their usage, please refer to the [**API Endpoints**](./docs/api_endpoints.md) documentation.

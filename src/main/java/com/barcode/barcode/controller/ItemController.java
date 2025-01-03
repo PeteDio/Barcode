@@ -1,14 +1,12 @@
 package com.barcode.barcode.controller;
 
-import com.barcode.barcode.model.Item;
 import com.barcode.barcode.dto.ItemRequestDTO;
-import com.barcode.barcode.repository.ItemRepository;
+import com.barcode.barcode.model.Item;
 import com.barcode.barcode.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
-
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,14 +14,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/items")
 public class ItemController {
-
     private final ItemService itemService;
-    private final ItemRepository itemRepository;
 
-    public ItemController(ItemService itemService,
-                          ItemRepository itemRepository) {
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
-        this.itemRepository = itemRepository;
     }
 
     /**

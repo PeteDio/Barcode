@@ -2,7 +2,20 @@
 
 This document provides a detailed description of the available API endpoints for the Barcode Database API and their usage.
 
-### GET /
+### GET /admin/healthcheck
+
+**Description:**
+Performs a health check on the application.
+
+**Response:**
+
+* **200 OK:**
+  * `message`: "Database healthy"
+  * `itemCount`: The current number of items in the database.
+
+This endpoint provides a quick way to verify the application's health and check the current state of the database.
+
+### GET /api/items
 
 **Description:** Retrieves all items available in the system.
 
@@ -11,7 +24,7 @@ This document provides a detailed description of the available API endpoints for
 * A list of `Item` objects with an HTTP status code of 200 (OK) if items are found.
 * An HTTP status code of 204 (NO_CONTENT) if no items are found.
 
-### GET /{id}
+### GET /api/items/{id}
 
 **Description:** Fetches an item by its unique identifier.
 
@@ -25,7 +38,7 @@ This document provides a detailed description of the available API endpoints for
     * If the item is found, the status code is set to 200 (OK) and the response body contains the item data.
     * If the item is not found, the status code is set to 404 (NOT_FOUND).
 
-### POST /
+### POST /api/items/
 
 **Description:** Creates a new item and persists it to the database.
 
@@ -45,7 +58,7 @@ This document provides a detailed description of the available API endpoints for
 * Barcodes are validated to ensure they adhere to the expected format.
 * Duplicate barcodes and names are checked to prevent conflicts.
 
-### PUT /{id}
+### PUT /api/items/{id}
 
 **Description:** Updates an existing item identified by its ID.
 
@@ -63,7 +76,7 @@ This document provides a detailed description of the available API endpoints for
     * The updated `Item` object with an HTTP status code of 200 (OK) if the update is successful.
     * An HTTP status code of 404 (NOT_FOUND) if an item with the given ID does not exist.
 
-### PUT /{id}/barcodes
+### PUT /api/items/{id}/barcodes
 
 **Description:** Updates the barcode(s) of an existing item identified by its ID.
 
@@ -89,7 +102,7 @@ This document provides a detailed description of the available API endpoints for
 * Barcodes are validated to ensure they adhere to the expected format.
 * Duplicate barcodes are checked to prevent conflicts.
 
-### GET /search/barcode
+### GET /api/items/search/barcode
 
 **Description:** Searches for items by a list of barcodes.
 
@@ -104,7 +117,7 @@ This document provides a detailed description of the available API endpoints for
     * An empty body with HTTP status 400 (Bad Request) if no barcodes are provided or the list is empty.
     * An empty body with HTTP status 404 (Not Found) if no items are found for the provided barcodes.
 
-### GET /search/name/
+### GET /api/items/search/name/
 
 **Description:** Searches for items by name (partial match with case-insensitive search).
 
@@ -118,7 +131,7 @@ This document provides a detailed description of the available API endpoints for
     * A list of matching items on success (HTTP status 200 OK).
     * An empty body with HTTP status 404 (Not Found) if no items are found for the provided name.
 
-### DELETE /{id}
+### DELETE /api/items/{id}
 
 **Description:** Deletes an item by its ID.
 

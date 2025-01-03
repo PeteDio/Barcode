@@ -24,4 +24,6 @@ public interface ItemService {
     boolean hasName(String name);
 
     void delete(Item item);
+
+    long getItemCount();
 }
