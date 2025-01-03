@@ -1,36 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"  lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Create Item</title>
     <script type="text/javascript" th:src="@{/js/Utils.js}"></script>
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+    <link th:href="@{/css/item/create.css}" rel="stylesheet" />
 </head>
-<body>
-<h1>Create New Item</h1>
+<body class="custom-body">
+<h1 class="form-heading">Create New Item</h1>
 
-<form th:object="${item}">
+<form th:object="${item}" class="form-container">
     <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
         <p th:each="error : ${#fields.errors('*')}" th:text="${error}"></p>
     </div>
-    <input type="hidden" th:field="*{id}"/>
-    <label for="name">Name:</label>
-    <input type="text" id="name" th:field="*{name}"/><br><br>
-    <label th:field="*{barcodes}">Barcodes:</label><br>
-    <ul id="barcodeList">
-        <li th:each="barcode, stat : ${item.barcodes}" th:id="'barcode-' + ${stat.index}">
-            <span th:text="${stat.index + 1}"></span>
-            <p th:text="${barcode}"></p>
-            <button type="button" th:onclick=`removeBarcode(${stat.index})`>Remove</button>
-        </li>
-    </ul>
 
-    <h2>Add New Barcodes</h2>
-    <label for="newBarcode"></label><input type="text" id="newBarcode" placeholder="Enter new barcode..."/>
-    <button type="button" onclick="addNewBarcode()">Add Barcode</button>
-    <br><br>
-    <button type="button" id="submit-button">Save</button>
+    <input type="hidden" th:field="*{id}" />
+
+    <!-- Name Field -->
+    <div class="input-group">
+        <label for="name" class="input-label">Name:</label>
+        <input type="text" id="name" th:field="*{name}" class="input-field" />
+    </div>
+
+    <!-- Barcodes Field -->
+    <div class="input-group">
+        <label th:field="*{barcodes}" class="input-label">Barcodes:</label>
+        <ul id="barcodeList" class="barcode-list">
+            <li th:each="barcode, stat : ${item.barcodes}" th:id="'barcode-' + ${stat.index}" class="barcode-item">
+                <span th:text="${stat.index + 1}" class="barcode-index"></span>
+                <p th:text="${barcode}" class="barcode-text"></p>
+                <button type="button" th:onclick="removeBarcode(${stat.index})" class="remove-button">Remove</button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Add Barcode Section -->
+    <h2 class="sub-heading">Add New Barcodes</h2>
+    <div class="input-group">
+        <label for="newBarcode" class="input-label"></label>
+        <input type="text" id="newBarcode" placeholder="Enter new barcode..." class="input-field" />
+        <button type="button" onclick="addNewBarcode()" class="add-button">Add Barcode</button>
+    </div>
+
+    <!-- Save Button -->
+    <div class="submit-group">
+        <button type="button" id="submit-button" class="submit-button">Save</button>
+    </div>
 </form>
 
-<a href="/">Back to Item List</a>
+<!-- Back to Item List Link -->
+<div class="back-link-container">
+    <a href="/" class="back-link">Back to Item List</a>
+</div>
+
 <script src="/js/create.scripts.js"></script>
 </body>
 </html>
