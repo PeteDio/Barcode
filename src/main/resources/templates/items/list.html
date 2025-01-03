@@ -3,45 +3,42 @@
 <head>
     <title>Item List</title>
     <script th:src="@{/js/list.scripts.js}" type="text/javascript"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+    <link th:href="@{/css/item/list.css}" rel="stylesheet" />
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans">
+<body class="custom-body">
 <!-- Heading Section -->
-<h1 class="text-3xl font-semibold text-gray-100 mb-6 text-center md:text-left">Item List</h1>
-<div class="max-w-full">
-    <table class="min-w-full table-auto border-collapse shadow-md rounded-lg bg-gray-800 text-gray-100">
+<h1 class="custom-heading">Item List</h1>
+
+<div class="table-container">
+    <table class="custom-table">
         <thead>
-        <tr class="bg-gray-700">
-            <th class="px-4 py-2 border text-left">Name</th>
-            <th class="px-4 py-2 border text-left">Barcodes</th>
-            <th class="px-4 py-2 border text-left">Actions</th>
+        <tr class="table-header">
+            <th class="table-cell">Name</th>
+            <th class="table-cell">Barcodes</th>
+            <th class="table-cell">Actions</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="item : ${items}">
-            <td class="px-4 py-2 border" th:text="${item.name}"></td>
-            <td class="px-4 py-2 border flex flex-wrap space-x-2 max-w-full">
-                    <span class="bg-gray-600 text-xs px-2 py-1 rounded-md truncate"
-                          th:each="barcode : ${item.barcodes}"
-                          th:text="${barcode}">
-                     </span>
+            <td class="table-cell" th:text="${item.name}"></td>
+            <td class="table-cell">
+                <div class="barcode-container">
+                    <span class="barcode-chip" th:each="barcode : ${item.barcodes}" th:text="${barcode}"></span>
+                </div>
             </td>
-            <td class="px-4 py-2 border">
-                <a class="text-blue-400 hover:text-blue-500 transition duration-300"
-                   th:href="@{/{itemId}/edit(itemId=${item.id})}">Edit</a>
-                <button class="ml-2 text-red-400 hover:text-red-500 transition duration-300"
-                        th:onclick="deleteItem([[${item.id}]])">Delete
-                </button>
+            <td class="table-cell">
+                <a class="edit-link" th:href="@{/{itemId}/edit(itemId=${item.id})}">Edit</a>
+                <button class="delete-button" th:onclick="deleteItem([[${item.id}]])">Delete</button>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
+
 <!-- Create New Item Link -->
-<div class="mt-6 text-center">
-    <a class="inline-block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
-       href="/create">Create
-        New Item</a>
+<div class="create-item-container">
+    <a class="create-item-link" href="/create">Create New Item</a>
 </div>
 
 </body>
