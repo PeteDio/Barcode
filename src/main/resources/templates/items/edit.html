@@ -3,32 +3,54 @@
 <head>
     <title>Edit Item</title>
     <script type="text/javascript" th:src="@{/js/Utils.js}"></script>
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+    <link th:href="@{/css/item/edit.css}" rel="stylesheet" />
 </head>
 <body>
-<h1>Edit Item</h1>
-<!--/*@thymesVar id="item" type="com.barcode.barcode.model.Item"*/-->
-<div th:object="${item}">
-    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
-        <p th:each="error : ${#fields.errors('*')}" th:text="${error}"></p>
-    </div>
-    <input type="hidden" th:field="*{id}"/>
-    <label for="name">Name:</label>
-    <input type="text" id="name" th:field="*{name}"/><br><br>
-    <label th:field="*{barcodes}">Barcodes:</label><br>
-    <ul id="barcodeList">
-        <li th:each="barcode, stat : ${item.barcodes}" th:id="'barcode-' + ${stat.index}">
-            <span th:text="${stat.index + 1}"></span>
-            <p th:text="${barcode}"></p>
-            <button type="button" th:onclick="'removeBarcode(' + ${stat.index} + ')'">Remove</button>
-        </li>
-    </ul>
 
-    <h2>Add New Barcodes</h2>
-    <label for="newBarcode"></label><input type="text" id="newBarcode" placeholder="Enter new barcode..."/>
-    <button type="button" onclick="addNewBarcode()">Add Barcode</button>
-    <br><br>
-    <button type="button" id="submit-button">Save</button>
+<!-- Page Header -->
+<h1 class="custom-heading">Edit Item</h1>
+
+<!-- Form Container -->
+<div th:object="${item}" class="form-container">
+    <!-- Hidden ID Field -->
+    <input type="hidden" th:field="*{id}" />
+
+    <!-- Name Field -->
+    <div class="form-group">
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" id="name" th:field="*{name}" class="form-input" />
+    </div>
+
+    <!-- Barcodes Field -->
+    <div class="form-group">
+        <label for="barcodeList" class="form-label">Barcodes:</label>
+        <ul id="barcodeList" class="barcode-list">
+            <li th:each="barcode, stat : ${item.barcodes}" th:id="'barcode-' + ${stat.index}" class="barcode-item">
+                <span th:text="${stat.index + 1}" class="barcode-index"></span>
+                <p class="barcode-text" th:text="${barcode}"></p>
+                <button type="button" th:onclick="'removeBarcode(' + ${stat.index} + ')'" class="remove-button">Remove</button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Add New Barcode Section -->
+    <h2 class="subheading">Add New Barcodes</h2>
+    <div class="form-group">
+        <label for="newBarcode" class="form-label">New Barcode:</label>
+        <div class="input-group">
+            <input type="text" id="newBarcode" placeholder="Enter new barcode..." class="form-input" />
+            <button type="button" onclick="addNewBarcode()" class="add-button">Add Barcode</button>
+        </div>
+    </div>
+
+    <!-- Save Button -->
+    <div class="save-button-container">
+        <button type="button" id="submit-button" class="save-button">Save</button>
+    </div>
 </div>
+
 <script src="/js/edit.scripts.js"></script>
+
 </body>
 </html>
